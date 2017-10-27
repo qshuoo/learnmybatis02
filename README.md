@@ -71,5 +71,112 @@ MyBatis 是一款优秀的持久层框架，它支持定制化 SQL、存储过�
 	</mappers>
 	
 
+### 测试curd
 
+mapper.xml
+
+	<!-- 查询所有用户 -->
+	<select id="listUsers" resultType="com.qshuoo.pojo.User">
+		select * from user
+	</select>
+	
+	<!-- 根据id查询用户 -->
+	<select id="getUserById" resultType="User" parameterType="int">
+		<!-- 当参数只有一个时，只需参数类型对应，sql语句中变量名称随意(#{}中内容) -->
+		select * from user where id = #{id}
+	</select>
+	
+	<!-- 添加用户 -->
+	<insert id="saveUser" parameterType="user">
+		<!-- 若传递过来的参数是一个对象时，sql语句中的变量名必须与对象属相相对应 -->
+		insert into user values (#{id}, #{name}, #{password})
+	</insert>
+	
+	<!-- 删除用户 -->
+	<delete id="deleteUserByNameAndPwd" parameterType="map">
+		<!-- 若传递过来的参数时map,sql语句中的变量名必须与map中key的名相同 -->
+		delete from user where name = #{name} and password = #{password}
+	</delete>
+	
+	<update id="updateUserNameById" parameterType="User">
+		update user set name = #{name} where id = #{id}
+	</update>
+
+test.java
+
+	@Before
+	public void init() {
+		InputStream is = this.getClass().getClassLoader().getResourceAsStream("mybatis_config.xml");
+
+		SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(is);
+
+		session = factory.openSession();
+	}
+
+	/**
+	 * 查询所有用户 查询成功，返回userlist
+	 */
+	@Test
+	public void listUsers() {
+
+		List<User> users = session.selectList("com.qshuoo.pojo.User.listUsers");
+		System.out.println(users);
+
+	}
+
+	/**
+	 * 根据id查询用户，查询成功
+	 */
+	@Test
+	public void getUserById() {
+		User user = session.selectOne("com.qshuoo.pojo.User.getUserById", 1);
+		System.out.println(user);
+	}
+	
+	/**
+	 * 插入用户，插入成功
+	 */
+	@Test
+	public void saveUser() {
+		User user = new User();
+		user.setName("ghm");
+		user.setPassword("12138");
+		int res = session.insert("com.qshuoo.pojo.User.saveUser", user);
+		
+		assertEquals(1, res);
+	}
+	
+	/**
+	 * 根据用户名和密码删除用户，删除成功
+	 */
+	
+	@Test
+	public void deleteUserByNameAndPwd() {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("name", "ghm");
+		map.put("password", "12138");
+		
+		int res = session.delete("com.qshuoo.pojo.User.deleteUserByNameAndPwd", map);
+		
+		assertEquals(2, res);
+	}
+	
+	/**
+	 * 测试更新用户，测试通过
+	 */
+	@Test
+	public void updateUserNameById() {
+		User user = new User();
+		user.setId(1);
+		user.setName("lgt");
+		int res = session.update("com.qshuoo.pojo.User.updateUserNameById", user);
+		
+		assertEquals(1, res);
+	}
+	
+	@After
+	public void destory() {
+		session.commit();
+		session.close();
+	}
 

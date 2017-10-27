@@ -8,4 +8,26 @@
 		select * from user
 	</select>
 	
+	<!-- 根据id查询用户 -->
+	<select id="getUserById" resultType="User" parameterType="int">
+		<!-- 当参数只有一个时，只需参数类型对应，sql语句中变量名称随意(#{}中内容) -->
+		select * from user where id = #{id}
+	</select>
+	
+	<!-- 添加用户 -->
+	<insert id="saveUser" parameterType="user">
+		<!-- 若传递过来的参数是一个对象时，sql语句中的变量名必须与对象属相相对应 -->
+		insert into user values (#{id}, #{name}, #{password})
+	</insert>
+	
+	<!-- 删除用户 -->
+	<delete id="deleteUserByNameAndPwd" parameterType="map">
+		<!-- 若传递过来的参数时map,sql语句中的变量名必须与map中key的名相同 -->
+		delete from user where name = #{name} and password = #{password}
+	</delete>
+	
+	<update id="updateUserNameById" parameterType="User">
+		update user set name = #{name} where id = #{id}
+	</update>
+	
 </mapper>
