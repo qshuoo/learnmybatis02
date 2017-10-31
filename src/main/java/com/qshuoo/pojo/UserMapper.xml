@@ -15,7 +15,7 @@
 	</select>
 	
 	<!-- 添加用户 -->
-	<insert id="saveUser" parameterType="user">
+	<insert id="saveUser" parameterType="User">
 		<!-- 若传递过来的参数是一个对象时，sql语句中的变量名必须与对象属相相对应 -->
 		insert into user values (#{id}, #{name}, #{password})
 	</insert>
