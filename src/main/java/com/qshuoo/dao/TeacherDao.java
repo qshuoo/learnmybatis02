@@ -18,5 +18,32 @@ public interface TeacherDao {
 	 * @return
 	 */
 	int saveTeacher(Teacher teacher);
+	/**
+	 * 通过名字 和 年龄查询教师
+	 * @param teacher
+	 * @return
+	 */
+	List<Teacher> getTeacherByNameAndAge(Teacher teacher);
+	
+	/**
+	 * 通过名字 或 年龄查询老师
+	 * @param teacher
+	 * @return
+	 */
+	List<Teacher> getTeacherByNameOrAge(Teacher teacher);
+	
+	/**
+	 * 更新老师
+	 * @param teacher
+	 * @return
+	 */
+	int updateTeacher(Teacher teacher);
+	
+	/**
+	 * 根据年龄查询老师
+	 * @param ages
+	 * @return
+	 */
+	List<Teacher> listTeachersByAge(List<Integer> ages);
 
 }

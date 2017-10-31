@@ -3,12 +3,72 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qshuoo.dao.TeacherDao">
 
-<select id="listTeachers" resultType="Teacher">
-	select * from teacher
-</select>
+	<select id="listTeachers" resultType="Teacher">
+		select * from teacher
+	</select>
 
-<insert id="saveTeacher" parameterType="Teacher">
-	insert into teacher (name, age) values (#{name}, #{age})
-</insert>
+	<insert id="saveTeacher" parameterType="Teacher">
+		insert into teacher
+		(name, age) values (#{name}, #{age})
+	</insert>
 
+	<select id="getTeacherByNameAndAge" resultType="Teacher"
+		parameterType="Teacher">
+		select * from teacher
+		<!-- where 1=1 <if test="name != null and name != ''"> and name = #{name} 
+			</if> <if test="age > 0"> and age = #{age} </if> -->
+
+		<where>
+			<if test="name != null and name != ''">
+				name = #{name}
+			</if>
+			<if test="age > 0">
+				and age = #{age}
+			</if>
+		</where>
+	</select>
+
+	<select id="getTeacherByNameOrAge" resultType="Teacher"
+		parameterType="Teacher">
+		select * from teacher
+		where 1=1
+		<choose>
+			<when test="name != null and name != ''">
+				and name = #{name}
+			</when>
+			<when test="age > 0">
+				and age = #{age}
+			</when>
+			<otherwise>
+				and id = 1
+			</otherwise>
+		</choose>
+	</select>
+
+	<update id="updateTeacher" parameterType="Teacher">
+		update teacher
+		<set>
+			<if test="name != null and name != ''">
+				name = #{name},
+			</if>
+			<if test="age > 0 and age &lt; 199">
+				age = #{age}
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+
+	<select id="listTeachersByAge" resultType="Teacher"
+		parameterType="java.util.List">
+		select * from teacher
+		<if test="list != null">
+			<trim prefix="where" prefixOverrides="AND|OR">
+				age in
+				<foreach collection="list" item="age" separator="," open="("
+					close=")">
+					#{age}
+				</foreach>
+			</trim>
+		</if>
+	</select>
 </mapper>

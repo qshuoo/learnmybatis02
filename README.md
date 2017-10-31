@@ -112,8 +112,21 @@ MyBatis 是一款优秀的持久层框架，它支持定制化 SQL、存储过�
 缺点：接口方法注解会有过长的情况
 
 
-### 使用mapper。xml+接口的方式
+### 使用mapper.xml+接口的方式
 
 1.	定义pojo的接口与方法	
 2.	在mapper.xml中定义命名空间是接口的包名加类名，方法的id与接口中的方法对应
 3.	在核心配置文件中映射mapper.xml
+
+### 动态sql
+
+Mybatis提供了动态 SQL 元素，这些元素的使用方式和 JSTL 或其他类似基于 XML 的文本处理器标签相似。
+总体说来mybatis 动态SQL 语句主要有以下几类:
+1. if 语句 (简单的条件判断)
+2. choose (when,otherwize) ,相当于java 语言中的 switch ,与 jstl 中的choose 很类似.
+3. trim (对包含的内容加上 prefix,或者 suffix 等，前缀，后缀)
+4. where (主要是用来简化sql语句中where条件判断的，能智能的处理 and or ,不必担心多余导致语法错误)
+5. set (主要用于更新时)
+6. foreach (在实现 mybatis in 语句查询时特别有用)
+
+
